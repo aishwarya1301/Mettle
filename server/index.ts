@@ -12,12 +12,22 @@ import {
   RUN_SYSTEM,
   RUN_SCHEMA,
 } from "./prompts.ts";
+import { demoInterview, DEMO_SPEC, demoRule, demoRun } from "./fixtures.ts";
 
 const MODEL = "claude-opus-5";
+const HAS_KEY = !!process.env.ANTHROPIC_API_KEY;
 const app = express();
 app.use(express.json({ limit: "2mb" }));
 
 const client = new Anthropic();
+
+/** True when this request should be served from the baked-in demo instead of
+ *  the live model: the client asked for demo mode, or there's no API key. */
+function isDemo(req: express.Request): boolean {
+  return req.body?.demo === true || !HAS_KEY;
+}
+
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 type Effort = "low" | "medium" | "high";
 
@@ -59,9 +69,19 @@ app.get("/api/context", (_req, res) => {
   res.json({ operator: OPERATOR, ticketCount: TICKETS.length });
 });
 
+// Lets the front end know whether a live key exists, so it can default to the
+// baked-in demo and lock the toggle to "Demo" when there's no key.
+app.get("/api/mode", (_req, res) => {
+  res.json({ hasKey: HAS_KEY });
+});
+
 app.post("/api/interview", async (req, res) => {
   try {
     const turns = (req.body.turns ?? []) as { q: string; a: string }[];
+    if (isDemo(req)) {
+      await sleep(600);
+      return res.json(demoInterview(turns));
+    }
     const data = await ask({
       system: INTERVIEW_SYSTEM,
       user:
@@ -85,6 +105,10 @@ app.post("/api/interview", async (req, res) => {
 app.post("/api/build", async (req, res) => {
   try {
     const turns = (req.body.turns ?? []) as { q: string; a: string }[];
+    if (isDemo(req)) {
+      await sleep(1400);
+      return res.json(DEMO_SPEC);
+    }
     const data = await ask({
       system: SYNTH_SYSTEM,
       user: `Here is everything she told you.\n\n${transcriptOf(
@@ -105,6 +129,10 @@ app.post("/api/build", async (req, res) => {
 app.post("/api/rule", async (req, res) => {
   try {
     const { text, existing } = req.body as { text: string; existing: string[] };
+    if (isDemo(req)) {
+      await sleep(500);
+      return res.json(demoRule(text, existing ?? []));
+    }
     const data = await ask({
       system: RULE_PARSE_SYSTEM,
       user: `Rules her tool already has: ${existing.join(
@@ -127,6 +155,10 @@ app.get("/api/tickets", (_req, res) => res.json(TICKETS));
 app.post("/api/run", async (req, res) => {
   try {
     const { spec } = req.body as { spec: any };
+    if (isDemo(req)) {
+      await sleep(2400);
+      return res.json(demoRun(spec));
+    }
     const rulesText = spec.rules
       .map(
         (r: any) =>
@@ -164,11 +196,10 @@ app.post("/api/run", async (req, res) => {
 
 const PORT = 8787;
 app.listen(PORT, () => {
-  const ok = !!process.env.ANTHROPIC_API_KEY;
   console.log(`\n  Mettle API  ·  http://localhost:${PORT}`);
   console.log(
-    ok
-      ? `  ANTHROPIC_API_KEY loaded  ·  model ${MODEL}\n`
-      : `  ⚠  No ANTHROPIC_API_KEY found. Add it to .env and restart.\n`
+    HAS_KEY
+      ? `  ANTHROPIC_API_KEY loaded  ·  model ${MODEL}  ·  demo toggle available in the UI\n`
+      : `  No ANTHROPIC_API_KEY — running the baked-in demo (fully offline, no key needed).\n`
   );
 });

@@ -49,11 +49,20 @@ export type Result = {
 
 export type RunOutput = { callout: string; results: Result[] };
 
-export async function post<T>(url: string, body: unknown): Promise<T> {
+// Demo mode is a module-level flag so every request carries it without threading
+// it through props. Default on — the baked-in demo is what runs unless someone
+// flips to Live (and Live is only offered when the server has an API key).
+let demoMode = true;
+export const isDemoMode = () => demoMode;
+export const setDemoMode = (on: boolean) => {
+  demoMode = on;
+};
+
+export async function post<T>(url: string, body: Record<string, unknown>): Promise<T> {
   const r = await fetch(url, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
+    body: JSON.stringify({ ...body, demo: demoMode }),
   });
   const j = await r.json();
   if (!r.ok) throw new Error(j.error || "Something went wrong.");

@@ -1,8 +1,28 @@
 # Mettle — build status
 
-**Status: done and verified end-to-end against the live API.**
+**Status: done. Verified end-to-end against the live API AND clicked through
+in a real browser, in both modes. A deterministic demo is now baked in.**
 
-Run it: `npm run dev` → **http://localhost:5180**
+Run it: `npm run dev` → **http://localhost:5180** — works with no API key.
+
+## Baked-in demo (new)
+
+The header has a **Demo / Live** toggle, defaulting to Demo:
+
+- All four endpoints serve scripted responses from `server/fixtures.ts` —
+  instant, offline, zero API cost, zero chance of a live-model wobble on stage.
+- The demo run is **not a recording**: `demoRun()` reads the current spec, so
+  the correction loop genuinely works. Verified in the browser: WO-4484
+  (deadbolt) sits in SCHEDULE OUT marked "No rule of yours yet" → she types the
+  lock rule → re-run → it moves to SAME DAY with her rule chip in copper.
+  Removing a rule also really removes its effect.
+- The scripted interview answers are written so the built rules quote them
+  verbatim — click-to-fill still traces every rule to "her words."
+- No key in `.env` → the server runs demo-only and the toggle locks.
+- Live mode is unchanged — same prompts, same schemas, flip the toggle.
+
+Full click-through verified in the browser (intro → interview → review → add
+rule → run → re-run → outcome). `tsc --noEmit` and `vite build` both clean.
 
 ---
 
@@ -29,9 +49,9 @@ You pasted your API key into chat, so it's in the transcript. It's written to
 | Correct → re-run loop (changes actually change the output) | ✅ live-tested |
 | Four-stage UI | ✅ `tsc --noEmit` clean, `vite build` clean |
 
-**Not done:** I never clicked through the UI in a real browser — no screenshot
-tooling in this environment. Types and build are clean and the data contracts
-are verified, but give it one dry run before you present.
+~~**Not done:** I never clicked through the UI in a real browser.~~ Now done —
+full four-stage click-through verified in a real browser, in demo mode, with
+the correction loop landing exactly as scripted.
 
 ## Latency to plan around
 

@@ -12,11 +12,26 @@ stays the authority; Claude understands, structures, and executes.
 
 ```bash
 npm install
-echo "ANTHROPIC_API_KEY=sk-ant-..." > .env
 npm run dev
 ```
 
-Then open **http://localhost:5180**.
+Then open **http://localhost:5180**. That's it — **the demo is baked in** and runs
+fully offline, no API key needed.
+
+### Demo vs Live
+
+A **Demo / Live** toggle sits in the header.
+
+- **Demo** (default): deterministic, instant, offline. The four Claude calls are
+  served from `server/fixtures.ts` — scripted interview, prebuilt "Morning
+  Queue" spec, and a run that *reacts to her edits*: remove a rule and its
+  tickets lose their chips; add the lock rule and the deadbolt ticket moves.
+  Same JSON shapes as the live API, so the UI can't tell the difference.
+- **Live**: real calls to `claude-opus-5`. Needs a key:
+  `echo "ANTHROPIC_API_KEY=sk-ant-..." > .env` and restart. Without a key the
+  toggle locks to Demo. Budget ~20s for the build step and ~35s for the run.
+
+Present in Demo; flip to Live if someone asks "is it real?"
 
 ## The demo (about 2 minutes)
 
@@ -80,7 +95,9 @@ explicit that Claude executes her rules rather than second-guessing them.
 ```
 server/data.ts      14 mock tickets + operator profile
 server/prompts.ts   system prompts + JSON schemas (the actual product thinking)
-server/index.ts     Express + Anthropic SDK
-src/App.tsx         the four stages
+server/fixtures.ts  the baked-in demo: scripted interview, spec, and a run
+                    that reacts to her rule edits (offline, deterministic)
+server/index.ts     Express + Anthropic SDK; each endpoint serves demo or live
+src/App.tsx         the four stages + the Demo/Live toggle
 src/styles.css
 ```

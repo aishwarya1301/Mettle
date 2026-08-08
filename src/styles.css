@@ -70,6 +70,26 @@ textarea, input { font: inherit; color: inherit; }
 .who b { font-size: 13px; font-weight: 600; }
 .who i { font-style: normal; font-size: 12px; color: var(--faint); }
 
+/* ---------------------------------------------------------- mode switch */
+
+.modeswitch {
+  display: inline-flex; align-items: center; gap: 2px;
+  padding: 3px; border-radius: 100px;
+  border: 1px solid var(--line); background: var(--paper);
+}
+.modeopt {
+  border: 0; background: transparent;
+  font-size: 12px; font-weight: 600; color: var(--muted);
+  padding: 4px 12px; border-radius: 100px;
+  letter-spacing: 0.01em; line-height: 1.4;
+  transition: background 0.15s, color 0.15s;
+}
+.modeopt.on { background: var(--card); color: var(--ink); box-shadow: var(--shadow); }
+.modeswitch.isdemo .modeopt.on { color: var(--sage); }
+.modeswitch.islive .modeopt.on { color: var(--copper); }
+.modeopt:disabled { cursor: default; opacity: 0.5; }
+.modeswitch.locked { opacity: 0.9; }
+
 /* ---------------------------------------------------------- loop rail */
 
 .rail {

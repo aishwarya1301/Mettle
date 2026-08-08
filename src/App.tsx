@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { InterviewStep, Result, Rule, Spec, Ticket, Turn, RunOutput } from "./types.ts";
-import { post } from "./types.ts";
+import { post, setDemoMode } from "./types.ts";
 
 type Stage = "intro" | "know" | "need" | "build" | "do";
 
@@ -18,10 +18,24 @@ export default function App() {
   const [tickets, setTickets] = useState<Ticket[]>([]);
   const [run, setRun] = useState<RunOutput | null>(null);
   const [err, setErr] = useState("");
+  // "demo" = baked-in, offline, deterministic. "live" = real model calls.
+  // hasKey false means Live isn't available, so the toggle locks to demo.
+  const [demo, setDemo] = useState(true);
+  const [hasKey, setHasKey] = useState(false);
 
   useEffect(() => {
     fetch("/api/tickets").then((r) => r.json()).then(setTickets).catch(() => {});
+    fetch("/api/mode")
+      .then((r) => r.json())
+      .then((m) => setHasKey(!!m.hasKey))
+      .catch(() => {});
   }, []);
+
+  function toggleMode(next: boolean) {
+    if (!hasKey) return; // Live requires a key; stay in demo.
+    setDemo(next);
+    setDemoMode(next);
+  }
 
   const idx = STEPS.findIndex((s) => s.key === stage);
 
@@ -31,6 +45,30 @@ export default function App() {
         <div className="wordmark">Mettle<span>.</span></div>
         <div className="tagline">Turn what you know into what you can do</div>
         <div className="spacer" />
+        <div
+          className={`modeswitch ${demo ? "isdemo" : "islive"} ${hasKey ? "" : "locked"}`}
+          role="group"
+          aria-label="Run mode"
+          title={
+            hasKey
+              ? "Demo runs fully offline with baked-in responses. Live calls the real model."
+              : "No API key found — running the baked-in demo."
+          }
+        >
+          <button
+            className={`modeopt ${demo ? "on" : ""}`}
+            onClick={() => toggleMode(true)}
+          >
+            ● Demo
+          </button>
+          <button
+            className={`modeopt ${!demo ? "on" : ""}`}
+            onClick={() => toggleMode(false)}
+            disabled={!hasKey}
+          >
+            Live
+          </button>
+        </div>
         <div className="who">
           <div className="av">MV</div>
           <div>
