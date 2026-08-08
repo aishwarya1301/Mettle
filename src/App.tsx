@@ -151,28 +151,30 @@ function Intro({ onStart }: { onStart: () => void }) {
         <div>
           <div className="eyebrow">A new interface for expertise</div>
           <h1>
-            You already know how to do this.
+            The manual is wrong. You're not.
             <br />
-            Now you can build the tool for it.
+            Build the tool that knows the difference.
           </h1>
 
           <div className="thesis">
             <p className="strike">Learn AI or get left behind.</p>
             <p className="dim">
-              The Bay Area went orchards → factories → software → this. Every
-              time, the jobs changed. The people who knew how the work actually
-              worked did not become worthless.
+              This valley grew apricots before it grew chips. Orchards,
+              canneries, silicon, software — and at every turn someone was told
+              their experience had just expired. It never did. The job changed
+              names; the judgment didn't.
             </p>
             <p>
-              You don't need to learn to code. You need to explain how you
-              already solve the problem.
+              You don't need to learn to code. You need to say, in your own
+              words, how you already solve the problem.
             </p>
           </div>
 
           <p className="lede">
-            Mettle interviews you about one recurring task, turns your judgment
-            into a working tool, and runs it on your real data. You review
-            every rule. You correct anything wrong. It stays yours.
+            Mettle asks how you make the calls the manual can't — the tells,
+            the exceptions, the mistake you only made once — and turns your
+            answers into a working tool that runs on your real data. You read
+            every rule. You change anything that isn't you. It stays yours.
           </p>
 
           <button className="btn copper" onClick={onStart}>
@@ -870,15 +872,15 @@ function Outcome({
 
       <div className="closing">
         <p className="big">
-          Every technological transition changes jobs. It doesn't erase human
-          capability.
+          A transition takes the job. It has never once taken the judgment.
         </p>
         <p>
-          Orchards to factories to software to this. Fremont still runs on
-          people who know how the work actually works — the maintenance
-          coordinators, the shift supervisors, the schedulers, the estimators.
-          They've been told to learn AI. What they actually need is a way to
-          turn nineteen years of judgment into something that runs.
+          The apricots went, and the canneries, and the fabs. Fremont still
+          runs on people who know how the work actually goes — the maintenance
+          coordinators, the shift leads, the schedulers, the estimators. Every
+          one of them has been told to learn AI. Not one of them has been
+          offered the thing they'd actually use: a way to put nineteen years of
+          judgment somewhere it can do the work.
         </p>
         <p style={{ fontWeight: 600, color: "var(--ink)", marginTop: 18 }}>
           Everyone should be able to build software for the work they
