@@ -1,4 +1,4 @@
-import { OPERATOR } from "./data";
+import { OPERATOR } from "./data.js";
 
 export const PERSON = `You are working with one specific person:
 

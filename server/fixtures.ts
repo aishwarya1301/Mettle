@@ -8,7 +8,7 @@
 // she adds a lock rule, then fires it. That's the beat the whole demo is built
 // around, so it has to respond to her edits, not just replay a recording.
 
-import { TICKETS } from "./data";
+import { TICKETS } from "./data.js";
 
 /* ------------------------------------------------------------ 1. interview */
 

@@ -4,7 +4,7 @@
 import "dotenv/config";
 import express from "express";
 import Anthropic from "@anthropic-ai/sdk";
-import { TICKETS, OPERATOR } from "./data";
+import { TICKETS, OPERATOR } from "./data.js";
 import {
   INTERVIEW_SYSTEM,
   INTERVIEW_SCHEMA,
@@ -14,8 +14,8 @@ import {
   RULE_PARSE_SCHEMA,
   RUN_SYSTEM,
   RUN_SCHEMA,
-} from "./prompts";
-import { demoInterview, DEMO_SPEC, demoRule, demoRun } from "./fixtures";
+} from "./prompts.js";
+import { demoInterview, DEMO_SPEC, demoRule, demoRun } from "./fixtures.js";
 
 export const MODEL = "claude-opus-5";
 export const HAS_KEY = !!process.env.ANTHROPIC_API_KEY;
