@@ -1,4 +1,4 @@
-import { OPERATOR } from "./data.ts";
+import { OPERATOR } from "./data";
 
 export const PERSON = `You are working with one specific person:
 

@@ -1,5 +1,5 @@
 // Local dev entry: `npm run dev` runs this alongside Vite (which proxies /api).
-import { app, HAS_KEY, MODEL } from "./app.ts";
+import { app, HAS_KEY, MODEL } from "./app";
 
 const PORT = 8787;
 app.listen(PORT, () => {
